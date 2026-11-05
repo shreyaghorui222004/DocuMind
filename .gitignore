@@ -1,0 +1,32 @@
+﻿# Python
+**/__pycache__/
+*.py[cod]
+**/venv/
+**/.venv/
+.pytest_cache/
+.coverage
+
+# Environment variables
+**/.env
+**/.env.*
+!**/.env.example
+
+# Node and Vite
+**/node_modules/
+**/dist/
+**/build/
+**/.vite/
+
+# Uploaded documents
+backend/data/uploads/*
+!backend/data/uploads/.gitkeep
+
+# Local databases
+*.db
+*.sqlite3
+
+# IDE and OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

@@ -1,0 +1,47 @@
+
+# Python
+__pycache__/
+*.py[cod]
+*.log
+.pytest_cache/
+.coverage
+
+# Virtual environments
+**/venv/
+**/.venv/
+**/env/
+
+# Environment variables and secrets
+**/.env
+**/.env.*
+!**/.env.example
+
+# Node / React / Vite
+**/node_modules/
+**/dist/
+**/build/
+**/.vite/
+
+# Uploaded PDFs and local data
+backend/data/uploads/*
+!backend/data/uploads/.gitkeep
+
+# Local databases
+*.db
+*.sqlite3
+
+# IDE and OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+# Frontend environment
+frontend/.env
+frontend/.env.*
+!frontend/.env.example
+
+# Frontend dependencies
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
