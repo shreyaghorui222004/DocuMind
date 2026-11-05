@@ -8,7 +8,7 @@ An AI-powered knowledge workspace — upload PDFs, ask questions in plain langua
 
 <br/>
 
-[![Live Demo](https://img.shields.io/badge/🚀_Live_Demo-Open_App-713CFF?style=for-the-badge)](https://documind-hub-sigma.vercel.app/)
+[![Live Demo](https://img.shields.io/badge/🚀_Live_Demo-Open_App-713CFF?style=for-the-badge)](https://docu-mind-gilt.vercel.app)
 [![API](https://img.shields.io/badge/⚡_Backend_API-Render-3B82F6?style=for-the-badge)](https://documind-ekua.onrender.com)
 
 ![React](https://img.shields.io/badge/React-18-20232A?style=flat-square&logo=react&logoColor=61DAFB)
