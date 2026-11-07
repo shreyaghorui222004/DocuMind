@@ -1,6 +1,5 @@
-
 # ==========================================
-# RAGVERSE - SEMANTIC RETRIEVER
+# DOCUMIND - SEMANTIC RETRIEVER
 # ==========================================
 
 from app.retrieval.vector_store import get_vector_store
@@ -8,11 +7,12 @@ from app.retrieval.vector_store import get_vector_store
 
 def retrieve_documents(
     query: str,
-    k: int = 3
+    k: int = 3,
+    document_ids: list[str] | None = None
 ):
     """
-    Retrieve the most relevant document chunks
-    from Neon PostgreSQL using vector similarity.
+    Retrieve the most relevant chunks from Neon PostgreSQL,
+    searching ONLY inside the given documents.
     """
 
     # Validate user query
@@ -22,13 +22,24 @@ def retrieve_documents(
     if k < 1:
         raise ValueError("k must be at least 1")
 
+    # Never search the whole table
+    if not document_ids:
+        raise ValueError("Select or upload a document first")
+
     # Get existing vector store
     vector_store = get_vector_store()
 
-    # Perform semantic similarity search
+    # Plain equality filters (most reliable across langchain-postgres versions)
+    if len(document_ids) == 1:
+        doc_filter = {"document_id": document_ids[0]}
+    else:
+        doc_filter = {"$or": [{"document_id": d} for d in document_ids]}
+
+    # Semantic similarity search limited to these documents
     results = vector_store.similarity_search(
         query=query,
-        k=k
+        k=k,
+        filter=doc_filter
     )
 
     return results
