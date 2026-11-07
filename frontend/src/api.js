@@ -18,13 +18,13 @@ export function uploadPdf(file, onProgress) {
   });
 }
 
-export async function askQuestion(question, k = 3) {
+export async function askQuestion(question, k = 3, documentIds = []) {
   let res;
   try {
     res = await fetch(`${BASE}/chat`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ question, k }),
+      body: JSON.stringify({ question, k, document_ids: documentIds }),
     });
   } catch {
     throw new Error("Cannot reach the backend. Is it running at " + BASE + "?");

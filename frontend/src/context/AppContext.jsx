@@ -18,6 +18,7 @@ export function AppProvider({ children }) {
   const [toasts, setToasts] = useState([]);
   const busyRef = useRef(false);
   const prefsRef = useRef(prefs); prefsRef.current = prefs;
+  const dataRef = useRef(data); dataRef.current = data;
 
   useEffect(() => {
     if (user) S.saveData(user.id, { docs: data.docs.filter((d) => d.status === "ready"), convs: data.convs });
@@ -55,7 +56,12 @@ export function AppProvider({ children }) {
   const ask = async (cid, question) => {
     busyRef.current = true; setBusy(true);
     try {
-      const r = await askQuestion(question, 3);
+      // Always answer from the most recently uploaded (ready) document
+      const ready = dataRef.current.docs.filter((d) => d.status === "ready" && d.document_id);
+      const latest = ready.reduce((a, d) => (!a || (d.created || 0) > (a.created || 0) ? d : a), null);
+      if (!latest) throw new Error("Upload a PDF first, then ask your question.");
+      const ids = [latest.document_id];
+      const r = await askQuestion(question, 3, ids);
       if (typeof r.answer !== "string" || !r.answer.trim()) throw new Error("The AI returned an empty answer.");
       addMsg(cid, { role: "ai", content: r.answer, sources: Array.isArray(r.sources) ? r.sources : [], time: Date.now() });
     } catch (e) {

@@ -1,4 +1,3 @@
-
 import uuid
 import shutil
 import traceback
@@ -63,6 +62,12 @@ class ChatRequest(BaseModel):
         ge=1,
         le=10,
         description="Number of relevant chunks to retrieve"
+    )
+
+    document_ids: list[str] = Field(
+        min_length=1,
+        max_length=50,
+        description="Only search inside these uploaded documents"
     )
 
 
@@ -215,10 +220,15 @@ def chat(request: ChatRequest):
 
     try:
 
-        # Run complete RAG pipeline
+        # Only accept well-formed document ids (they are UUIDs)
+        for doc_id in request.document_ids:
+            uuid.UUID(doc_id)
+
+        # Run complete RAG pipeline, limited to the given documents
         result = ask_question(
             query=request.question,
-            k=request.k
+            k=request.k,
+            document_ids=request.document_ids
         )
 
         return result
@@ -244,18 +254,24 @@ def chat(request: ChatRequest):
             status_code=500,
             detail="Failed to generate answer"
         )
-        
+
+
 # ==========================================
-# 3. CORS CONFIGURATION
+# 8. CORS CONFIGURATION
 # ==========================================
+
+allowed_origins = [
+    "https://docu-mind-gilt.vercel.app",
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+]
+
+if settings.frontend_url:
+    allowed_origins.append(settings.frontend_url.rstrip("/"))
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=list({
-        settings.frontend_url,
-        "http://localhost:5173",
-        "http://127.0.0.1:5173"
-    }),
+    allow_origins=list(set(allowed_origins)),
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
