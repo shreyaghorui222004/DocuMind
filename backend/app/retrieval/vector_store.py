@@ -56,10 +56,10 @@ def get_vector_store():
             "postgresql+psycopg://",
             1
         )
-
-    # Step 3: Create PostgreSQL engine
     engine = PGEngine.from_connection_string(
-        url=database_url
+        url=database_url,
+        pool_pre_ping=True,
+        pool_recycle=240
     )
 
     # Step 4: Connect to existing vector table
